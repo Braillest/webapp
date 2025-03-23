@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="{{ asset('favicon.ico') }}">
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <meta name="theme-color" content="#000000">
+
+        <!--
+        <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        <script src="{{ asset('build/app.js') }}" defer></script>
+        -->
+
+        {% block stylesheets %}
+        {% endblock %}
+
+        <script>
+        // Register serviceWorker
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+
+        // Ask user for notification permission after first click event
+        document.addEventListener('click', () => {
+            Notification.requestPermission().then(function (status) {
+                if (status === 'granted') {
+                    console.log('User granted permission for notifications');
+                }
+            });
+        });
+
+        // Subscribing to notifications
+        navigator.serviceWorker.ready.then(registration => {
+            return registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: 'BG_2pYgz6vFUTXGxyQjoEKYNg6vmU-JBgmWs8xkuEpNcz_b7eKATOZokLxifu0qlQm_Qlx3xf-i1hyZIEEVF59E'
+            });
+        }).then(subscription => {
+            console.log('Subscribed:', JSON.stringify(subscription));
+
+            // Send subscription to your backend server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/subscribe", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log("Response:", xhr.responseText);
+                    } else {
+                        console.error("Error:", xhr.status, xhr.statusText);
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(subscription));
+        });
+        </script>
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+
+        <button id="installPWA" style="display:none;">Install App</button>
+
+        <script>
+        // Enable Add to Home Screen (A2HS)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredPrompt = event;
+
+            document.getElementById('installPWA').style.display = 'block';
+        });
+
+        document.getElementById('installPWA').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        });
+        </script>
+    </body>
+</html>

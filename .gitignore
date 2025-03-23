@@ -2,6 +2,7 @@
 data/cache/*
 data/core-backend/*
 data/database/*
+data/blender/*
 
 # Logs directory excludes
 logs/core-backend/*

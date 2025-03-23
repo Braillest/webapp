@@ -1,0 +1,8 @@
+# Set your domain
+myhostname = braillest.com
+mydomain = braillest.com
+myorigin = /usr/lib/sendmail
+
+# Set the network interfaces
+inet_interfaces = all
+inet_protocols = ipv4

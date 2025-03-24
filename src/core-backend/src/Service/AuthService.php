@@ -15,13 +15,19 @@ class AuthService
 
     public function authorize(SessionInterface $session): bool
     {
-        // Missing user_id case
+        // Missing user_id key case
         if (!$session->get('user_id'))
         {
             return false;
         }
 
-        // Expired login case
+        // Missing expires key case
+        if (!$session->get('expires'))
+        {
+            return false;
+        }
+
+        // Expired login key case
         if ($session->get('expires') < new DateTime())
         {
             $this->logout($session);
@@ -29,6 +35,36 @@ class AuthService
         }
 
         return true;
+    }
+
+    public function authorizeRole(SessionInterface $session, int $role_id): bool
+    {
+        // Check typical authorization cases first
+        $authorized = $this->authorize($session);
+
+        // Missing role_id key case
+        if (!$session->get('role_id'))
+        {
+            return false;
+        }
+
+        // Get user
+        $user_id = $session->get('user_id');
+        $user = $this->entityManager->getRepository(User::class)->findById($user_id);
+
+        // Missing role case
+        $roles = $user->getRoles();
+        $found = false;
+        foreach ($roles as $role)
+        {
+            if ($role_id == $role->getId())
+            {
+                $found = true;
+                break;
+            }
+        }
+
+        return $found;
     }
 
     public function login(SessionInterface $session, string $username, string $password): bool
@@ -56,12 +92,26 @@ class AuthService
         // Set user_id
         $session->set('user_id', $user->getId());
 
+        // Set role
+        $session->set('role_id', $user->getRole()->getId());
+
         return true;
     }
 
-    // Register an account
-    public function register(string $username, string $password)
+    public function doesUsernameAlreadyExist(string $username): bool
     {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
+        return ($user != null);
+    }
+
+    public function register(string $username, string $password): void
+    {
+        // Username already exists case
+        if($this->doesUsernameAlreadyExist($username))
+        {
+            return;
+        }
+
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
         $user = new User();

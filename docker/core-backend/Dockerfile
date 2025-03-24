@@ -50,6 +50,15 @@ COPY docker/core-backend/postfix.cf /etc/postfix/main.cf
 RUN postfix check
 RUN postfix start
 
+# Installing blender
+# RUN curl -L -o blender-4.4.0-linux-x64.tar.xz https://mirror.clarkson.edu/blender/release/Blender4.4/blender-4.4.0-linux-x64.tar.xz
+# A helpful script to save everyone bandwidth during testing :)
+COPY data/blender/blender-4.4.0-linux-x64.tar.xz .
+RUN tar -xvf blender-4.4.0-linux-x64.tar.xz -C /opt/
+RUN rm blender-4.4.0-linux-x64.tar.xz
+RUN mv /opt/blender-4.4.0-linux-x64 /opt/blender
+RUN ln -s /opt/blender/blender /usr/local/bin/blender
+
 WORKDIR /braillest
 
 # Be sure to use --no-git when creating a new project

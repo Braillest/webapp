@@ -28,6 +28,7 @@ services:
       - 443:443
     volumes:
       - ./src/core-backend:/braillest
+      - ./data/core-backend:/data
       - ./logs/core-backend:/root/.symfony5/log
     networks:
       - braillest
@@ -57,7 +58,9 @@ services:
       - 8080:80
     env_file:
       - ./docker/database-viewer/.env
+    networks:
+      - braillest
 
 networks:
   braillest:
-    name: braillest
+    name: braillest_webapp

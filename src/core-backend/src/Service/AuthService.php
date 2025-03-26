@@ -98,7 +98,7 @@ class AuthService
         return true;
     }
 
-    public function doesUsernameAlreadyExist(string $username): bool
+    public function usernameAlreadyExist(string $username): bool
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
         return ($user != null);
@@ -107,7 +107,7 @@ class AuthService
     public function register(string $username, string $password): void
     {
         // Username already exists case
-        if($this->doesUsernameAlreadyExist($username))
+        if($this->usernameAlreadyExist($username))
         {
             return;
         }

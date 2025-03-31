@@ -15,7 +15,7 @@ final class BrowseController extends AbstractController
         $this->authService = $authService;
     }
 
-    #[Route('/browse', name: 'app_browse')]
+    #[Route('/browse', name: 'app_browse', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $session = $request->getSession();

@@ -53,11 +53,15 @@ RUN postfix start
 # Installing blender
 # RUN curl -L -o blender-4.4.0-linux-x64.tar.xz https://mirror.clarkson.edu/blender/release/Blender4.4/blender-4.4.0-linux-x64.tar.xz
 # A helpful script to save everyone bandwidth during testing :)
-COPY data/blender/blender-4.4.0-linux-x64.tar.xz .
-RUN tar -xvf blender-4.4.0-linux-x64.tar.xz -C /opt/
-RUN rm blender-4.4.0-linux-x64.tar.xz
-RUN mv /opt/blender-4.4.0-linux-x64 /opt/blender
-RUN ln -s /opt/blender/blender /usr/local/bin/blender
+# COPY data/blender/blender-4.4.0-linux-x64.tar.xz .
+# RUN tar -xvf blender-4.4.0-linux-x64.tar.xz -C /opt/
+# RUN rm blender-4.4.0-linux-x64.tar.xz
+# RUN mv /opt/blender-4.4.0-linux-x64 /opt/blender
+# RUN ln -s /opt/blender/blender /usr/local/bin/blender
+
+# Installing build123d
+RUN apt install -y python3-pip
+RUN pip install git+https://github.com/gumyr/build123d --break-system-packages
 
 WORKDIR /braillest
 
@@ -65,7 +69,7 @@ WORKDIR /braillest
 # Example:
 # symfony new logly --version="7.2.x" --webapp --no-git
 
-# ENTRYPOINT sleep infinity
+ENTRYPOINT sleep infinity
 
-# For Dev use only
-ENTRYPOINT symfony server:start --listen-ip=0.0.0.0
+# The below doesn't handle container restarts
+# ENTRYPOINT symfony server:start --listen-ip=0.0.0.0

@@ -9,7 +9,7 @@ final class STLControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/s/t/l');
+        $client->request('GET', '/stl');
 
         self::assertResponseIsSuccessful();
     }

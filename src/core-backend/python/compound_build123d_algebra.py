@@ -66,7 +66,7 @@ def generate_braille_molds(braille_file_path):
             delta = ord(character) - ord(space_character)
             binary = f"{delta:06b}"[::-1]
 
-            for i, (dx, dy) in enumerate([(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)]):
+            for i, (dx, dy) in enumerate([(0, 2), (0, 1), (0, 0), (1, 2), (1, 1), (1, 0)]):
                 if binary[i] == "1":
                     union_objects.append(dot_tool.translate((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, 0)))
                     difference_objects.append(hole_tool.translate((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, 0)))
@@ -87,12 +87,12 @@ def generate_braille_molds(braille_file_path):
 
     print("exporting positive mold")
     start = time.time()
-    export_stl(positive, positive_mold_file_path)
+    export_stl(positive, positive_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
     print(time.time() - start)
 
     print("exporting negative mold")
     start = time.time()
-    export_stl(negative, negative_mold_file_path)
+    export_stl(negative, negative_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
     print(time.time() - start)
 
 if __name__ == "__main__":

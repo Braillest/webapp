@@ -31,11 +31,13 @@ RUN docker-php-ext-install zip
 # Install symfony binary
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 RUN apt install -y symfony-cli
+RUN symfony server:ca:install
+
+# Install custom symfony binary
 # COPY data/core-backend/linux-binary.zip /tmp/linux-binary.zip
 # RUN cd /tmp && unzip /tmp/linux-binary -d /tmp
 # RUN cd /tmp && tar -xvzf /tmp/symfony-cli_linux_amd64.tar.gz
 # RUN mv /tmp/symfony /usr/local/bin/symfony
-RUN symfony server:ca:install
 
 # Install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"

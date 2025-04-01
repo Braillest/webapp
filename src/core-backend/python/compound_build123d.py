@@ -43,6 +43,9 @@ def generate_braille_molds(braille_file_path):
     union_objects = []
     difference_objects = []
 
+    print("generating geometry")
+    start = time.time()
+
     for line_index in range(cell_y_count + 1):
         y = (cell_y_count - line_index) * cell_h
         if line_index % 2 == 0:
@@ -55,8 +58,7 @@ def generate_braille_molds(braille_file_path):
     y_offset = 0
 
     for line_index, line in enumerate(lines[0:cell_y_count]):
-        print(line_index)
-        x_offset = 4 + (3 * cell_w) + cell_padding_x
+        x_offset = 2 + (3 * cell_w) + cell_padding_x
         y_offset = (cell_y_count - line_index) * cell_h + cell_padding_y
         text = line.rstrip()
 
@@ -70,16 +72,18 @@ def generate_braille_molds(braille_file_path):
                     difference_objects.append(hole_tool.translate((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, 0)))
             x_offset += cell_w
 
+    print(time.time() - start)
+
     print("making positive mold")
     start = time.time()
-    positive_mold += Compound(union_objects)
+    positive_mold += union_objects
     print(time.time() - start)
 
     print("making negative mold")
     start = time.time()
-    negative_mold -= Compound(difference_objects)
-    print(time.time() - start)
+    negative_mold -= difference_objects
     negative_mold = negative_mold.rotate(Axis.Y, 180)
+    print(time.time() - start)
 
     print("exporting positive mold")
     start = time.time()

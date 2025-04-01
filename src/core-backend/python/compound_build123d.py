@@ -76,27 +76,23 @@ def generate_braille_molds(braille_file_path):
 
     print("making positive mold")
     start = time.time()
-    positive_mold += union_objects
+    positive = positive_mold + union_objects
     print(time.time() - start)
 
     print("making negative mold")
     start = time.time()
-    negative_mold -= difference_objects
-    negative_mold = negative_mold.rotate(Axis.Y, 180)
-    print(time.time() - start)
-
-    print("exporting positive mold")
-    start = time.time()
-    exporter = Mesher()
-    exporter.add_shape(positive_mold)
-    exporter.write(positive_mold_file_path)
+    negative = negative_mold - difference_objects
+    negative = negative.rotate(Axis.Y, 180)
     print(time.time() - start)
 
     print("exporting negative mold")
     start = time.time()
-    exporter = Mesher()
-    exporter.add_shape(negative_mold)
-    exporter.write(negative_mold_file_path)
+    export_stl(negative, negative_mold_file_path)
+    print(time.time() - start)
+
+    print("exporting positive mold")
+    start = time.time()
+    export_stl(positive, positive_mold_file_path)
     print(time.time() - start)
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ dot_d = 0.6
 hole_r = 0.95 
 hole_d = 1.6
 
-positive_mold_w = paper_w + (2 * slot_w)
+positive_mold_w = paper_w + 4
 positive_mold_h = paper_h
 positive_mold_d = 0.8
 
@@ -66,14 +66,14 @@ def generate_braille_molds(braille_file_path):
         if line_index % 2 == 0:
             pin_coords.append((pin_w/2, y + pin_h/2, pin_d/2))
             pin_coords.append((positive_mold_w - pin_w/2, y + pin_h/2, pin_d/2))
-            slot_coords.append((-2, y, 0))
-            slot_coords.append((218, y, 0))
+            slot_coords.append((0, y + slot_h/2, 0))
+            slot_coords.append((negative_mold_w, y + slot_h/2, 0))
 
     # Generate dot and hole locations
     dot_coords = []
     hole_coords = []
     for line_index, line in enumerate(lines[0:cell_y_count]):
-        x_offset = slot_w + (3 * cell_w) + cell_padding_x
+        x_offset = 2 + (3 * cell_w) + cell_padding_x
         y_offset = (cell_y_count - line_index) * cell_h + cell_padding_y
         text = line.rstrip()
 
@@ -83,7 +83,7 @@ def generate_braille_molds(braille_file_path):
 
             for i, (dx, dy) in enumerate([(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)]):
                 if binary[i] == "1":
-                    dot_coords.append((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, positive_mold_d))
+                    dot_coords.append((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, positive_mold_d + (dot_d / 2)))
                     hole_coords.append((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, 0.2))
             x_offset += cell_w
 
@@ -100,9 +100,9 @@ def generate_braille_molds(braille_file_path):
 
         # Add dots
         with Locations(dot_coords):
-            Cylinder(dot_r, dot_d, mode=Mode.ADD)
+            Sphere(dot_r, dot_d, mode=Mode.ADD)
 
-        export_stl(positive_mold.part, positive_mold_file_path)
+        export_stl(positive_mold.part, positive_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
     print(time.time() - start)
 
     print("Generating negative mold")
@@ -120,7 +120,7 @@ def generate_braille_molds(braille_file_path):
         with Locations(hole_coords):
             Hole(hole_r, hole_d, mode=Mode.SUBTRACT)
 
-        export_stl(negative_mold.part, negative_mold_file_path)
+        export_stl(negative_mold.part, negative_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
     print(time.time() - start)
 
 if __name__ == "__main__":

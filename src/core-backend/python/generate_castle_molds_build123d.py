@@ -71,7 +71,7 @@ def generate_braille_molds(braille_file_path):
             delta = ord(character) - ord(SPACE_CHARACTER)
             binary = f"{delta:06b}"[::-1]
 
-            for i, (dx, dy) in enumerate([(0, 2), (0, 1), (0, 0), (1, 0), (1, 1), (1, 2)]):
+            for i, (dx, dy) in enumerate([(0, 2), (0, 1), (0, 0), (1, 2), (1, 1), (1, 0)]):
                 if binary[i] == "1":
                     tx, ty = x_offset + dx * CELL_SPACING, y_offset + dy * CELL_SPACING
                     positive_mold += dot_tool.translate((tx, ty, 0))

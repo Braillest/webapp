@@ -85,14 +85,14 @@ def generate_braille_molds(braille_file_path):
     negative = negative.rotate(Axis.Y, 180)
     print(time.time() - start)
 
-    print("exporting negative mold")
-    start = time.time()
-    export_stl(negative, negative_mold_file_path)
-    print(time.time() - start)
-
     print("exporting positive mold")
     start = time.time()
     export_stl(positive, positive_mold_file_path)
+    print(time.time() - start)
+
+    print("exporting negative mold")
+    start = time.time()
+    export_stl(negative, negative_mold_file_path)
     print(time.time() - start)
 
 if __name__ == "__main__":

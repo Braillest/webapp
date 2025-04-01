@@ -21,25 +21,25 @@ cell_spacing = 2.5
 
 pin_w = 1.9
 pin_h = 9.9
-pin_d = 1.8
+pin_d = 1.6
 
-slot_w = 4
+slot_w = 2
 slot_h = 10
-slot_d = 4
+slot_d = 0.8
 
 dot_r = 0.75
 dot_d = 0.6
 
-hole_r = 0.95 
+hole_r = 0.95
 hole_d = 1.6
 
 positive_mold_w = paper_w + 4
 positive_mold_h = paper_h
-positive_mold_d = 0.8
+positive_mold_d = 0.6
 
 negative_mold_w = positive_mold_w
 negative_mold_h = paper_h
-negative_mold_d = 1
+negative_mold_d = 0.8
 
 max_cell_x_count = math.floor(paper_w / cell_w)
 cell_x_count = max_cell_x_count - 3 - 1
@@ -55,8 +55,15 @@ def generate_braille_molds(braille_file_path):
     if not os.path.isfile(braille_file_path):
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), braille_file_path)
 
+    print("Reading in file")
+    start = time.time()
+
     with open(braille_file_path, "r", encoding="utf-8") as file:
         lines = file.readlines()
+
+    print(time.time() - start)
+    print("Generating feature coordinates")
+    start = time.time()
 
     # Generate pin and slot locations
     pin_coords = []
@@ -66,8 +73,8 @@ def generate_braille_molds(braille_file_path):
         if line_index % 2 == 0:
             pin_coords.append((pin_w/2, y + pin_h/2, pin_d/2))
             pin_coords.append((positive_mold_w - pin_w/2, y + pin_h/2, pin_d/2))
-            slot_coords.append((0, y + slot_h/2, 0))
-            slot_coords.append((negative_mold_w, y + slot_h/2, 0))
+            slot_coords.append((slot_w/2, y + slot_h/2, slot_d/2))
+            slot_coords.append((negative_mold_w - slot_w/2, y + slot_h/2, slot_d/2))
 
     # Generate dot and hole locations
     dot_coords = []
@@ -87,8 +94,10 @@ def generate_braille_molds(braille_file_path):
                     hole_coords.append((x_offset + dx * cell_spacing, y_offset + dy * cell_spacing, 0.2))
             x_offset += cell_w
 
+    print(time.time() - start)
     print("Generating positive mold")
     start = time.time()
+
     with BuildPart() as positive_mold:
 
         # Bottom SW corner on 0,0
@@ -100,13 +109,14 @@ def generate_braille_molds(braille_file_path):
 
         # Add dots
         with Locations(dot_coords):
-            Sphere(dot_r, dot_d, mode=Mode.ADD)
+            Sphere(dot_r, arc_size1=0, mode=Mode.ADD)
 
         export_stl(positive_mold.part, positive_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
-    print(time.time() - start)
 
+    print(time.time() - start)
     print("Generating negative mold")
     start = time.time()
+
     with BuildPart() as negative_mold:
 
         # Bottom SW corner on 0,0
@@ -121,6 +131,7 @@ def generate_braille_molds(braille_file_path):
             Hole(hole_r, hole_d, mode=Mode.SUBTRACT)
 
         export_stl(negative_mold.part, negative_mold_file_path, tolerance = 0.1, angular_tolerance = 1)
+
     print(time.time() - start)
 
 if __name__ == "__main__":

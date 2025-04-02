@@ -1,7 +1,8 @@
+import louis
 import os
 import re
 import sys
-import louis
+import time
 
 # Control variables
 character_x_count = 32
@@ -32,6 +33,9 @@ back_translation_path = back_translation_directory + filename + ".txt"
 formatted_braille_path = formatted_braille_directory + filename + ".txt"
 
 # Translate text to braille
+print("Translating text to braille")
+start_time = time.time()
+
 with open(text_file_path, "r") as text_file:
     text_lines = text_file.readlines()
     with open(braille_path, "w") as braille_file:
@@ -41,6 +45,10 @@ with open(text_file_path, "r") as text_file:
             braille_file.write(louis.translateString(translation_table, line) + "\n")
 
 # Backtranslate braille to text
+print(time.time() - start_time)
+print("Backtranslating braille to text")
+start_time = time.time()
+
 braille_lines = None
 with open(braille_path, "r") as braille_file:
     braille_lines = braille_file.readlines()
@@ -51,6 +59,10 @@ with open(braille_path, "r") as braille_file:
             back_translation_file.write(louis.backTranslateString(translation_table, line) + "\n")
 
 # Format braille
+print(time.time() - start_time)
+print("Formatting braille")
+start_time = time.time()
+
 pattern = r"([^\n]+(?:\n[^\n]+)*)"
 text = "".join(braille_lines)
 matches = re.finditer(pattern, text)
@@ -104,6 +116,10 @@ with open(formatted_braille_path, "w") as formatted_braille_file:
         formatted_braille_file.write(line + "\n")
 
 # Paginate braille
+print(time.time() - start_time)
+print("Paginating braille")
+start_time = time.time()
+
 pages = []
 current_page = []
 current_page_size = 0
@@ -161,3 +177,5 @@ for index, page in enumerate(pages):
     with open(f"{paginated_braille_directory}{index + 1}.txt", "w") as out_file:
         for line in page:
             out_file.write(line)
+
+print(time.time() - start_time)

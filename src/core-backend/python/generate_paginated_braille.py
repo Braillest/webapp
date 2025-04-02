@@ -164,17 +164,9 @@ with open(formatted_braille_path, "r") as formatted_braille_file:
 if current_page:
     pages.append(current_page)
 
-# Remove pages from dir
-for filename in os.listdir(paginated_braille_directory):
-    file_path = os.path.join(paginated_braille_directory, filename)
-    if os.path.isfile(file_path) and not os.path.basename(file_path).startswith("."):
-        os.remove(file_path)
-    elif os.path.isdir(file_path):
-        print(f"Skipping directory: {file_path}")
-
 # Write pages to dir
 for index, page in enumerate(pages):
-    with open(f"{paginated_braille_directory}{index + 1}.txt", "w") as out_file:
+    with open(f"{paginated_braille_directory}{(index + 1):03d}.txt", "w") as out_file:
         for line in page:
             out_file.write(line)
 

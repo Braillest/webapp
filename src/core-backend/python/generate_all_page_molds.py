@@ -27,7 +27,7 @@ async def main():
     text_filename = os.path.basename(text_file_path)
     text_filename = os.path.splitext(text_filename)[0]
     paginated_braille_directory = "/data/paginated-braille/" + text_filename + "/"
-    max_concurrent_tasks = 3
+    max_concurrent_tasks = 5
     semaphore = asyncio.Semaphore(max_concurrent_tasks)
 
     tasks = [run_script("/braillest/python/generate_paginated_braille.py", text_file_path, semaphore)]

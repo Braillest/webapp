@@ -52,9 +52,11 @@ COPY docker/core-backend/postfix.cf /etc/postfix/main.cf
 RUN postfix check
 RUN postfix start
 
-# Installing build123d
+# Installing pip packages
 RUN apt install -y python3-pip
 RUN pip install git+https://github.com/gumyr/build123d --break-system-packages
+RUN pip install requests --break-system-packages
+RUN pip install beautifulsoup4 --break-system-packages
 
 WORKDIR /braillest
 

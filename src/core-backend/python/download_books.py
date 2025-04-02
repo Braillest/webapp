@@ -22,6 +22,9 @@ for title, book in zip(titles, books):
         file.write(book)
 
     # Skip gutenberg copyright and extract book text
-    text = str(book).split("***")[2]
-    with open(text_dir + title + ".txt", "w") as file:
-        file.write(text)
+    try:
+        text = str(book).split("***")[2]
+        with open(text_dir + title + ".txt", "w") as file:
+            file.write(text)
+    except:
+        print(title)

@@ -1,11 +1,15 @@
 # Data directory excludes
 data/cache/*
+
+data/core-backend/back-translation/*
+data/core-backend/braille/*
+data/core-backend/braille-molds/*
+data/core-backend/formatted-braille/*
+data/core-backend/paginated-braille/*
 data/core-backend/source-material/books/*
 data/core-backend/source-material/texts/*
 data/core-backend/texts/*
-data/core-backend/braille/*
-data/core-backend/paginated-braille/*
-data/core-backend/braille-molds/*
+
 data/database/*
 
 # Logs directory excludes

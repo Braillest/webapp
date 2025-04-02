@@ -3,7 +3,7 @@
 > Downloading public domain books and converting Romeo and Juliet to molds:
 
 ```
-git clone git@github.com:Braillest/webapp.git
+git clone https://github.com/Braillest/webapp.git
 cd webapp
 ./scripts/copy-env.bash
 docker compose up -d

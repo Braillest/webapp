@@ -58,6 +58,12 @@ RUN pip install git+https://github.com/gumyr/build123d --break-system-packages
 RUN pip install requests --break-system-packages
 RUN pip install beautifulsoup4 --break-system-packages
 
+# Install louis lib
+RUN curl -LO https://github.com/liblouis/liblouis/releases/download/v3.31.0/liblouis-3.31.0.tar.gz
+RUN tar xfz liblouis-3.31.0.tar.gz
+RUN cd liblouis-3.31.0 && autoconf && ./configure && make -j $(nproc) && make -j $(nproc) install && cd python && python3 setup.py install
+RUN ldconfig
+
 WORKDIR /braillest
 
 # Be sure to use --no-git when creating a new project

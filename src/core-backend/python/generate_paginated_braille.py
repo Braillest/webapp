@@ -14,7 +14,7 @@ formatted_braille_directory = "/data/formatted-braille/"
 paginated_braille_directory = "/data/paginated-braille/"
 back_translation_directory = "/data/back-translation/"
 remove_trailing_whitespace = True
-translation_table = ["braille-patterns.cti", "en-us-g2.ctb"]
+translation_table = ["braille-patterns.cti", "en-ueb-g2.ctb"]
 
 # Validate provided file
 if not os.path.exists(text_file_path) or not os.path.isfile(text_file_path):

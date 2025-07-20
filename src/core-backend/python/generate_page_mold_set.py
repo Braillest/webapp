@@ -76,8 +76,8 @@ slot_coords = []
 for line_index in range(cell_y_count + 1):
     y = (cell_y_count - line_index) * cell_h
     if line_index % 2 == 0:
-        pin_coords.append((pin_w/2, y + pin_h/2, pin_d/2))
-        pin_coords.append((positive_mold_w - pin_w/2, y + pin_h/2, pin_d/2))
+        pin_coords.append((pin_w/2, y + slot_h/2, pin_d/2))
+        pin_coords.append((positive_mold_w - pin_w/2, y + slot_h/2, pin_d/2))
         slot_coords.append((slot_w/2, y + slot_h/2, slot_d/2))
         slot_coords.append((negative_mold_w - slot_w/2, y + slot_h/2, slot_d/2))
 
